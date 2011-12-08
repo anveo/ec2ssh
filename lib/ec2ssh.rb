@@ -1,7 +1,9 @@
 require 'etc'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/kernel/reporting'
+require 'colorize'
 require 'highline/import'
+require 'text-table'
 silence_warnings { require 'aws' }
 require 'yaml'
 require 'fileutils'
@@ -17,21 +19,74 @@ module Ec2ssh
     end
 
     def select_instance(instances=[])
-      # TODO: Order by region
       # TODO: Ansi colors https://github.com/JEG2/highline/blob/master/examples/ansi_colors.rb
       instances = get_all_ec2_instances
-      n = 0
-      hostnames = []
+      table_rows = []
+
       instances.each do |i|
         if i[:aws_state] == "running"
-          puts "#{n}. #{i[:aws_instance_id]}: %-20s\t%-60s\t%-10s\t%s" % [ i[:tags]["Name"], i[:aws_groups].join(','), i[:ssh_key_name], i[:dns_name] ]
-          hostnames << i[:dns_name]
-          n = n + 1
+          table_rows << ['', i[:tags]["Name"], i[:aws_instance_id], i[:aws_groups].join(','), i[:ssh_key_name], i[:aws_private_ip_address], i[:dns_name], i[:architecture], i[:aws_instance_type]]
         end
       end
-      template = @config[:template] || "ssh #{Etc.getlogin}@<instance>"
-      selected_host = ask("Host?  ", Integer) { |q| q.in = 0..hostnames.count }
-      command = template.gsub("<instance>",hostnames[selected_host])
+
+      # sort tables by tag name
+      table_rows.sort! do |a, b|
+        a[1] <=> b[1]
+      end
+
+      # give them numbers
+      table_rows.count.times do |i|
+        table_rows[i][0] = i + 1
+      end
+
+      table_header = ['', 'Name', 'Instance ID', 'SecGroup', 'Key', 'Internal IP', 'Public DNS', 'Arch', 'Type']
+
+      table = Text::Table.new :rows => table_rows, :head => table_header
+
+      # output table
+      puts table
+
+      input = ask(">>  ")
+      options = input.split
+
+      input_host = options[0]
+      input_user = options[1]
+      input_key  = options[2]
+
+      if input_host =~ /^\d+$/
+        host = table_rows[input_host.to_i]
+      else
+        host = table_rows.find { |h| h[1] == input_host }
+      end
+
+      host_ssh_key    = host[4]
+      host_private_ip = host[5]
+      host_public_dns = host[6]
+
+      default_user = @config[:default_user] || Etc.getlogin
+
+      template = @config[:template] || "ssh #{default_user}@<public_dns>"
+
+      # <instance> remains for compatibility with upstream
+      command = template.gsub("<instance>", host_public_dns).
+                         gsub("<public_dns>", host_public_dns).
+                         gsub("<private_ip>", host_private_ip)
+
+      # interpolate ssh user
+      if input_user.blank?
+        command.gsub!("<user>", default_user)
+      else
+        command.gsub!("<user>", input_user)
+      end
+
+      # interpolate ssh key
+      if input_key.blank?
+        command.gsub!("<key>", "")
+      else
+        command.gsub!("<key>", "-i ~/.ssh/#{input_key}.pem")
+      end
+
+      puts "!!! #{command}"
       exec(command)
     end
 
