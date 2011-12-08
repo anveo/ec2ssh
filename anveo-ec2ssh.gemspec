@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "anveo-ec2ssh.gemspec",
     "bin/ec2ssh",
     "lib/ec2ssh.rb",
     "lib/templates/ec2ssh_config_sample.yaml"
@@ -39,27 +40,39 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<highline>, [">= 1.6.8"])
       s.add_runtime_dependency(%q<aws>, [">= 2.5.6"])
       s.add_runtime_dependency(%q<activesupport>, ["~> 3.0.0"])
+      s.add_runtime_dependency(%q<colorize>, ["= 0.5.8"])
       s.add_runtime_dependency(%q<highline>, [">= 1.6.8"])
+      s.add_runtime_dependency(%q<text-table>, ["= 1.2.2"])
       s.add_runtime_dependency(%q<aws>, [">= 2.5.6"])
       s.add_runtime_dependency(%q<activesupport>, ["~> 3.0.0"])
+      s.add_runtime_dependency(%q<colorize>, ["= 0.5.8"])
+      s.add_runtime_dependency(%q<highline>, [">= 1.6.8"])
+      s.add_runtime_dependency(%q<text-table>, ["~> 1.2.2"])
     else
-      s.add_dependency(%q<highline>, [">= 1.6.8"])
       s.add_dependency(%q<aws>, [">= 2.5.6"])
       s.add_dependency(%q<activesupport>, ["~> 3.0.0"])
+      s.add_dependency(%q<colorize>, ["= 0.5.8"])
       s.add_dependency(%q<highline>, [">= 1.6.8"])
+      s.add_dependency(%q<text-table>, ["= 1.2.2"])
       s.add_dependency(%q<aws>, [">= 2.5.6"])
       s.add_dependency(%q<activesupport>, ["~> 3.0.0"])
+      s.add_dependency(%q<colorize>, ["= 0.5.8"])
+      s.add_dependency(%q<highline>, [">= 1.6.8"])
+      s.add_dependency(%q<text-table>, ["~> 1.2.2"])
     end
   else
-    s.add_dependency(%q<highline>, [">= 1.6.8"])
     s.add_dependency(%q<aws>, [">= 2.5.6"])
     s.add_dependency(%q<activesupport>, ["~> 3.0.0"])
+    s.add_dependency(%q<colorize>, ["= 0.5.8"])
     s.add_dependency(%q<highline>, [">= 1.6.8"])
+    s.add_dependency(%q<text-table>, ["= 1.2.2"])
     s.add_dependency(%q<aws>, [">= 2.5.6"])
     s.add_dependency(%q<activesupport>, ["~> 3.0.0"])
+    s.add_dependency(%q<colorize>, ["= 0.5.8"])
+    s.add_dependency(%q<highline>, [">= 1.6.8"])
+    s.add_dependency(%q<text-table>, ["~> 1.2.2"])
   end
 end
 
