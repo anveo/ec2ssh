@@ -54,7 +54,7 @@ module Ec2ssh
       input_key  = options[2]
 
       if input_host =~ /^\d+$/
-        host = table_rows[input_host.to_i]
+        host = table_rows[input_host.to_i - 1]
       else
         host = table_rows.find { |h| h[1] == input_host }
       end
