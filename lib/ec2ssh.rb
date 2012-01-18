@@ -25,7 +25,7 @@ module Ec2ssh
 
       instances.each do |i|
         if i[:aws_state] == "running"
-          table_rows << ['', i[:tags]["Name"], i[:aws_instance_id], i[:aws_groups].join(','), i[:ssh_key_name], i[:aws_private_ip_address], i[:dns_name], i[:architecture], i[:aws_instance_type]]
+          table_rows << ['', i[:tags]["Name"].blank? ? '' : i[:tags]["Name"], i[:aws_instance_id], i[:aws_groups].join(','), i[:ssh_key_name], i[:aws_private_ip_address], i[:dns_name], i[:architecture], i[:aws_instance_type]]
         end
       end
 
