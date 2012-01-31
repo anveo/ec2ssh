@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{anveo-ec2ssh}
-  s.version = "0.1.9"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Ramon Salvadó}, %q{Brian Racer}]
-  s.date = %q{2012-01-18}
+  s.date = %q{2012-01-31}
   s.description = %q{Since ec2 instance public hostnames are dynamic, and not easy to remember or type, this script provides a list all your running instances so you can select the one you want to ssh into easily (without having to pass the aws console ritual each time you need the hostname).}
   s.email = %q{bracer@gmail.com}
   s.executables = [%q{ec2ssh}]
