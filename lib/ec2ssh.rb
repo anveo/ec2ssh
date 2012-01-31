@@ -49,6 +49,12 @@ module Ec2ssh
       input = ask(">>  ")
       options = input.split
 
+      # check if last arg is 'public' or 'private'. If so remove it from the options stack and save the value
+      pub_priv_override = ''
+      if options[-1] =~ /public|private/
+        pub_priv_override = options.pop
+      end
+
       input_host = options[0]
       input_user = options[1]
       input_key  = options[2]
@@ -66,6 +72,16 @@ module Ec2ssh
       default_user = @config[:default_user] || Etc.getlogin
 
       template = @config[:template] || "ssh #{default_user}@<public_dns>"
+
+      # if we have a public or private ip override, replace the template variable
+      unless pub_priv_override.blank?
+        case pub_priv_override
+        when 'public'
+          template.gsub!("<private_ip>", "<public_dns>")
+        when 'private'
+          template.gsub!("<public_dns>", "<private_ip>")
+        end
+      end
 
       # <instance> remains for compatibility with upstream
       command = template.gsub("<instance>", host_public_dns).
