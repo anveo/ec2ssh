@@ -46,7 +46,8 @@ module Ec2ssh
       # output table
       puts table
 
-      input = ask(">>  ")
+      puts ">> id-or-name <user> <key> <public or private>"
+      input = ask(">> ")
       options = input.split
 
       # check if last arg is 'public' or 'private'. If so remove it from the options stack and save the value
