@@ -13,7 +13,7 @@ end
 ENV["EC2_URL"] = nil
 
 # TODO: Add proper command line arguments handling
-account = ARGV[0] || "default"
+account = (ARGV[0] unless ARGV[0] =~ /^-/) || 'default'
 
 ec2ssh = Ec2ssh::App.new("~/.ec2ssh", account.to_sym)
 ec2ssh.select_instance

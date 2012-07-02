@@ -16,6 +16,8 @@ module Ec2ssh
 
     def initialize(file = "~/.ec2ssh", account=:default)
       @config = read_aws_config(file, account)
+      @config[:cache_ttl] ||= 0
+      @config[:account] = account.to_s
     end
 
     def select_instance(instances=[])
@@ -128,15 +130,36 @@ module Ec2ssh
       id = @config[:id]
       key = @config[:key]
       regions ||= @config[:regions] || get_all_ec2_regions
-      instances = regions.map do |region|
-        silence_stream STDOUT do
-          Aws::Ec2.new(id, key, :region => region).describe_instances
+      cache_ttl = @config[:cache_ttl]
+      cache_dir = File.expand_path("~/.ec2ssh.d")
+      cache_filename = File.expand_path("#{cache_dir}/#{@config[:account]}-cache")
+
+      # make sure cache dir exists
+      Dir.mkdir(cache_dir) unless File.exist?(cache_dir)
+
+      # clear cache if -nc or --no-cache is passwd
+      if ARGV.include?('-nc') || ARGV.include?('--no-cache')
+        File.delete(cache_filename) if File.exist?(cache_filename)
+      end
+
+      if File.exist?(cache_filename) && (Time.now.to_i - File.mtime(cache_filename).to_i <= cache_ttl)
+        instances = YAML.load(File.read(cache_filename))
+      else
+        instances = regions.map do |region|
+          silence_stream STDOUT do
+            Aws::Ec2.new(id, key, :region => region).describe_instances
+          end
+        end.flatten
+
+        # cache data to disk
+        File.open(cache_filename, 'w+') do |f|
+          f.write YAML.dump(instances)
         end
-      end.flatten
+      end
+
+      instances
     rescue Aws::AwsError => e
       abort "AWS Error. #{e.message}"
     end
-
   end
-
 end
