@@ -4,15 +4,15 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{anveo-ec2ssh}
-  s.version = "0.2.0"
+  s.name = "anveo-ec2ssh"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = [%q{Ramon Salvadó}, %q{Brian Racer}]
-  s.date = %q{2012-01-31}
-  s.description = %q{Since ec2 instance public hostnames are dynamic, and not easy to remember or type, this script provides a list all your running instances so you can select the one you want to ssh into easily (without having to pass the aws console ritual each time you need the hostname).}
-  s.email = %q{bracer@gmail.com}
-  s.executables = [%q{ec2ssh}]
+  s.authors = ["Ramon Salvad\u{f3}", "Brian Racer"]
+  s.date = "2012-07-02"
+  s.description = "Since ec2 instance public hostnames are dynamic, and not easy to remember or type, this script provides a list all your running instances so you can select the one you want to ssh into easily (without having to pass the aws console ritual each time you need the hostname)."
+  s.email = "bracer@gmail.com"
+  s.executables = ["ec2ssh"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -30,11 +30,11 @@ Gem::Specification.new do |s|
     "lib/ec2ssh.rb",
     "lib/templates/ec2ssh_config_sample.yaml"
   ]
-  s.homepage = %q{http://github.com/anveo/ec2ssh}
-  s.licenses = [%q{MIT}]
-  s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.6}
-  s.summary = %q{A script to make it easier to ssh into running amazon EC2 instances.}
+  s.homepage = "http://github.com/anveo/ec2ssh"
+  s.licenses = ["MIT"]
+  s.require_paths = ["lib"]
+  s.rubygems_version = "1.8.11"
+  s.summary = "A script to make it easier to ssh into running amazon EC2 instances."
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
